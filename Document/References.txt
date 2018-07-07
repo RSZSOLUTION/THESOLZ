@@ -1,0 +1,403 @@
+===========================================================
+==========   PROJECT RELATED REFERENCE(S) LIST   ==========
+===========================================================
+
+1. ServiceDomain
+	a. System.Configuration
+	b. System.Drawing
+	c. PushSharp (nuget)
+	d. SSH.Net (nuget)
+
+2. ORMDomain
+	a. System.Configuration
+	b. EntityFramework (nuget)
+	c. Newtonsoft.Json (nuget)
+
+3. DataDomain
+	a. System.ComponentModel.DataAnnotations
+	b. System.Configuration
+	c. System.Web
+	d. System.Runtime.Caching
+	e. Microsoft.AspNet.Identity.EntityFramework (nuget)
+	f. Microsoft.AspNet.Identity.Owin (nuget)
+	g. Microsoft.Owin.Security.Facebook (nuget)
+	h. Microsoft.Owin.Security.Google (nuget)
+	i. Microsoft.Owin.Security.MicrosoftAccount (nuget)
+	j. Microsoft.Owin.Security.Twitter (nuget)
+	k. Microsoft.Owin.Host.SystemWeb (nuget)
+	l. Microsoft.AspNet.WebApi.Owin (nuget)		 
+	m. Z.EntityFramework.Plus.EF6 (nuget)
+	n. Microsoft.AspNet.Mvc (nuget)
+	o. System.ValueTuple (nuget)
+	p. MySql.Data.Entity (nuget)
+	q. Oracle.ManagedDataAccess.EntityFramework (nuget)	
+	r. ORMDomain (project)
+	s. ModelDomain (project)
+	t. ServiceDomain (project)
+
+4. ModelDomain
+	a. System.ComponentModel.DataAnnotations
+	b. Microsoft.AspNet.Mvc (nuget)
+
+3. CloudDomain
+	a. DataDomain (project)
+	b. ModelDomain (project)
+	c. DotNetZip (nuget)
+	d. WebMarkupMin.AspNet4.Mvc (nuget)
+	e. Jquery (nuget)
+	f. Jquery.Validation (nuget)
+	g. Microsoft.jQuery.Unobtrusive.Ajax (nuget)
+	h. Microsoft.jQuery.Unobtrusive.Validation (nuget)
+	i. Unity.Mvc5 (nuget)
+	j.Unity.WebAPI (nuget)
+	k. Microsoft.AspNet.Web.Optimization (nuget)
+	l. EntityFramework (nuget)
+	m. MySql.Data.Entity (nuget)
+	n. Oracle.ManagedDataAccess.EntityFramework (nuget)
+	
+
+======================================================
+==========   PROJECT RELATED CODE SNIPPET   ==========
+======================================================
+1. AJAX ACTION LINK : 
+<a data-ajax="true" data-ajax-begin="LoaderOn" data-ajax-complete="LoaderOff" data-ajax-confirm="Are you sure ?" data-ajax-failure="FailMessage" data-ajax-loading="#loader" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-success="SuccessMessage" data-ajax-update="#updatepanel" href="/Default/Help">Help</a>
+
+2. JQUERY AJAX CALL :
+$.ajax({
+	async: true,
+	beforeSend: function () { },
+	cache: false,
+	complete: function (xhr, status) { },
+	contentType: 'application/json; charset=utf-8',
+	data: JSON.stringify(requestData),//get -{id:xxx, name:xxx} 
+	dataType: 'json',
+	error: function (xhr, status, error) { },
+	headers: {},//{ 'Authorization': 'xxx', 'X-XSRF-TOKEN': 'xxx' }
+	processData: false,//true if get
+	success: function (result, status, xhr) { },
+	timeout: 5000,
+	type: 'POST',
+	url: 'api/xxx/xxx'
+});
+
+3. TYPESCRIPT COMMON MODULE :
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { SharedModule } from '../../Shared/shared.module';
+import { DataSortingModule } from '../../Service/sort.service';
+
+//import { SomeCompoment } from './some.component';
+
+@NgModule({
+	imports: [
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		RouterModule,
+
+		SharedModule,
+		DataSortingModule
+	],
+	declarations: [
+		//SomeCompoment,
+	]
+})
+export class ModuleNameModule {
+}
+
+4. TYPESCRIPT COMMON COMPONENT
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { HttpService, ResponseModel, UrlParameter } from '../../Service/http.service';
+import { ExtendedValidator, CustomValidation, ValidationType } from '../../Service/validation.service';
+
+declare function SomeJavascriptFunction(message: string): any/void;
+
+@Component({
+	selector: 'app-some-selector',
+	templateUrl: './Pages/somepath/some.component.html'
+})
+export class SomeCompoment implements OnInit {
+	public loaderstatus: boolean = false;
+	public messagebox: any = null;
+	public somemodel: FormGroup;
+	public extvalidations: Array<CustomValidation>;
+
+	ngOnInit() {
+		let js = document.createElement('script');
+		js.src = '../../Scripts/Common/passwordmanager.min.js';
+		this.domElement.nativeElement.appendChild(js);
+	}
+
+	MessageBoxCallBack(event: any): void {
+		switch (event) {
+			case '1': {
+				this.messagebox = { 'Type': 'confirm', 'Body': "Change will take effect after signout. Click 'YES' to signout and exit...", 'CallBack': '4' };
+				break;
+			}
+			case '2': {
+				break;
+			}
+			case '3': {
+				break;
+			}
+			case '4_OK': {
+				this.router.navigate(['../someurl', param1, param2...], { relativeTo: this.route });
+				break;
+			}
+			case '5': {
+				this.location.back();
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+	}
+
+	constructor(private formBuilder: FormBuilder, private httpService: HttpService, private domElement: ElementRef, private location: Location, private route: ActivatedRoute, private router: Router, private route: ActivatedRoute) {
+		this.somevariable = this.route.snapshot.paramMap.get('param1');
+		this.extvalidations = [
+			new CustomValidation(ValidationType.NotEqual, 'NewPassword', 'CurrentPassword'),
+			new CustomValidation(ValidationType.Equal, 'ConfirmPassword', 'NewPassword')
+		];
+		this.somemodel = this.formBuilder.group({
+			CurrentPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25), Validators.pattern('^[^\'\""\-]+$')]],
+			NewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25), Validators.pattern('^[^\'\""\-]+$')]],
+			ConfirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25), Validators.pattern('^[^\'\""\-]+$')]]
+		}, { validator: ExtendedValidator(this.extvalidations) });
+	}
+
+	public CallJsFunction(id: string) {
+		if (SomeJavascriptFunction != undefined) {			
+			SomeJavascriptFunction(id);
+		}
+	}
+
+	public Submit(): void {	
+		let permittedActions: string[] = JSON.parse(window.sessionStorage.getItem('USER_ACTION'));		
+		if (permittedActions.indexOf('someurl') > -1) {
+			this.loaderstatus = true;
+			let params = [
+				new UrlParameter('id', id)
+			];			
+			this.httpService.Put('someurl', this.somemodel.value, params)
+				.then((data: ResponseModel) => {
+					this.loaderstatus = false;
+					if (data.Status == 1) {
+						this.messagebox = { 'Type': 'success', 'Body': data.Message, 'CallBack': '1' };
+					}
+					else {
+						this.messagebox = { 'Type': 'fail', 'Body': data.Message, 'CallBack': '2' };
+					}
+				})
+				.catch((err) => {
+					this.loaderstatus = false;
+					this.messagebox = { 'Type': 'fail', 'Body': err, 'CallBack': '3' };
+				});
+		}
+		else {
+			this.messagebox = { 'Type': 'fail', 'Body': "Unauthorized Access... Request Denied !!!", 'CallBack': '5' };
+		}
+	}
+
+	public Reset(): void {		
+		this.somemodel.reset();
+	}
+}
+
+5. TYPESCRIPT COMMON ROUTE :
+import { Routes } from '@angular/router';
+
+import { AuthService } from '../Service/authorize.service';
+
+//import { SomeCompoment } from './some.component';
+
+export const ModuleNameRoute: Routes = [
+	{
+		path: 'someurl',
+		component: SomeCompoment,
+		canActivate: [AuthService],
+		children: [
+			{
+				path: 'somechildurl',
+				component: SomeComponent,
+				canActivate: [AuthService]
+			}
+		]
+	},
+	{
+		path: 'someurl',
+		component: SomeCompoment,
+		canActivate: [AuthService]
+	},
+	{
+		path: 'someurl/:parameter',
+		component: SomeCompoment,
+		canActivate: [AuthService]
+	}
+];
+
+6. TYPESCRIPT COMMON HTML FORM
+<main>
+	<article class="page-title">SOME PAGE TITLE</article>
+	<div class="row">
+		<div class="col-sm-12 col-md-6 col-lg-4 col-hd-3 col-md-offset-3 col-lg-offset-4 col-hd-offset-4-5">
+			<form [formGroup]="somemodel" (ngSubmit)="Submit()" autocomplete="off">
+				<div class="form-content">
+					<fieldset>
+						<legend>SOME TITLE</legend>
+						<div class="input-container" [ngClass]="{'has-danger': somemodel.controls['somefield'].invalid && somemodel.controls['somefield'].dirty,'has-success': somemodel.controls['somefield'].valid && somemodel.controls['somefield'].pristine}">
+							<i class="fa fa-asterisk"></i>
+							<input type="text" id="somefield" name="somefield" placeholder="current password" [formControl]="somemodel.controls['somefield']" />
+							<label for="somefield">Current Password</label>
+						</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('required') && somemodel.controls['somefield'].touched">current password is mandatory</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('minlength') && somemodel.controls['somefield'].touched">must be 4 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('maxlength') && somemodel.controls['somefield'].touched">not more than 25 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('pattern') && somemodel.controls['somefield'].touched">quotetion &amp; hyphen are not allowed</div>
+
+						<div class="input-container" [ngClass]="{'has-danger': somemodel.controls['somefield'].invalid && somemodel.controls['somefield'].dirty,'has-success': somemodel.controls['somefield'].valid && somemodel.controls['somefield'].pristine}">
+							<i class="fa fa-pencil-square"></i>
+							<input type="text" id="somefield" name="somefield" placeholder="new password" [formControl]="somemodel.controls['somefield']" />
+							<label for="somefield">New Password</label>
+						</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('required') && somemodel.controls['somefield'].touched">new password is mandatory</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('minlength') && somemodel.controls['somefield'].touched">must be 4 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('maxlength') && somemodel.controls['somefield'].touched">not more than 25 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('pattern') && somemodel.controls['somefield'].touched">quotetion &amp; hyphen are not allowed</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('notequal') && somemodel.controls['somefield'].touched">can not be same as current password</div>
+
+						<div class="input-container" [ngClass]="{'has-danger': addmenumodel.controls['somefield'].invalid && addmenumodel.controls['somefield'].dirty,'has-success': addmenumodel.controls['somefield'].valid && addmenumodel.controls['somefield'].pristine}">
+							<i class="fa fa-hand-paper-o"></i>
+							<select id="somefield" name="somefield" [formControl]="addmenumodel.controls['somefield']" (change)="SomeEvent($event.target.value)">
+								<option value="-1" disabled selected>--- Select Parent ---</option>
+								<option *ngFor="let item of parentmenus" [value]="item.Value">{{item.Text}}</option>
+							</select>
+							<label for="somefield">Parent Menu</label>
+						</div>
+						<div class="validation-message" *ngIf="addmenumodel.controls['Parent'].hasError('required') && addmenumodel.controls['Parent'].touched">parent menu is mandatory</div>
+						<div class="validation-message" *ngIf="addmenumodel.controls['Parent'].hasError('minlength') && addmenumodel.controls['Parent'].touched">not a valid parent</div>
+						<div class="validation-message" *ngIf="addmenumodel.controls['Parent'].hasError('maxlength') && addmenumodel.controls['Parent'].touched">not a valid parent</div>
+						<div class="validation-message" *ngIf="addmenumodel.controls['Parent'].hasError('pattern') && addmenumodel.controls['Parent'].touched">not a valid parent</div>
+
+						<div class="input-container" [ngClass]="{'has-danger': somemodel.controls['somefield'].invalid && somemodel.controls['somefield'].dirty,'has-success': somemodel.controls['somefield'].valid && somemodel.controls['somefield'].pristine}">
+							<i class="fa fa-check-circle-o"></i>
+							<input type="text" id="somefield" name="somefield" placeholder="confirm password" [formControl]="somemodel.controls['somefield']" />
+							<label for="somefield">Confirm Password</label>
+						</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('required') && somemodel.controls['somefield'].touched">confirm password is mandatory</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('minlength') && somemodel.controls['somefield'].touched">must be 4 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('maxlength') && somemodel.controls['somefield'].touched">not more than 25 character</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('pattern') && somemodel.controls['somefield'].touched">quotetion &amp; hyphen are not allowed</div>
+						<div class="validation-message" *ngIf="somemodel.controls['somefield'].hasError('equal') && somemodel.controls['somefield'].touched">confirm password mismatch</div>
+
+						<div class="button-group">
+							<button type="submit" [disabled]="!somemodel.valid">SAVE</button>
+							<button type="reset" (click)="Reset()">RESET</button>
+						</div>
+					</fieldset>
+				</div>
+			</form>
+			<!--<div id="keyboard-container"></div>-->
+		</div>
+	</div>	
+</main>
+<app-loader [loader]="loaderstatus"></app-loader>
+<app-messagebox [message]="messagebox" (callbackevent)="MessageBoxCallBack($event)"></app-messagebox>
+
+7. HTML GRID & TABLE
+<main>
+	<section *ngIf="somelist != undefined && somelist.length > 0; then IFBLOCK else ELSEBLOCK" class="hide"></section>
+	<ng-template #IFBLOCK>
+		<section class="responsive-data-container">
+			<ul class="table">
+				<li>
+					<div style="width: 30px;">Sl#</div>
+					<div>Field1 <i class="fa fa-sort right" (click)="OrderBy('fieldname')"></i></div>
+					<div>Field2</div>
+					<div>Action</div>
+				</li>
+				<li *ngFor="let item of somelist | sort: { property: column, direction: direction }; let i = index">
+					<div data-header="Sl#" [attr.data-val]="[i+1]"></div>
+					<div data-header="Field1" [attr.data-val]="[item.somefield]"></div>
+					<div data-header="Field2" [attr.data-val]="[item.somefield == 'condition'? '---': item.somefield]"></div>
+					<div data-header="Action" class="Action">
+						<i class="fa fa-cog" title="sometitle" [routerLink]="['../someurl', param1, param2]" [routerLinkActive]="['active']"></i> &nbsp;|&nbsp;
+						<i class="fa fa-wrench" title="sometitle" [routerLink]="['../someurl', param1]" [routerLinkActive]="['active']"></i>
+					</div>
+				</li>
+			</ul>
+		</section>
+	</ng-template>
+	<ng-template #ELSEBLOCK>
+		<img src="../Assets/Image/Common/norecord-found.png" class="no-record" alt="No record" />
+	</ng-template>
+</main>
+<app-loader [loader]="loaderstatus"></app-loader>
+<app-messagebox [message]="messagebox" (callbackevent)="MessageBoxCallBack($event)"></app-messagebox>
+
+8. CONTROLLER SAMPLE
+using DataHandler.Repository;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Http;
+using UIModels;
+
+[RoutePrefix("controllername/api")]
+public class ControllerNameController : ApiController
+{
+	private readonly ResponseModel _response;
+	private readonly IEncryptionManager _encryptor;
+
+	private ResponseModel Response => new ResponseModel();
+
+	public string Input { get; set; } = "Empty";
+
+	private T Decrypt<T>(RequestModel m)
+	{
+		var serializeData = _encryptor.DecryptData(m.EncryptedData);
+		this.Input = this.Input == "Empty" ? serializeData : $"{this.Input}|{serializeData}";
+		return JsonConvert.DeserializeObject<T>(serializeData);
+	}
+	
+	private string Decrypt(string value)
+	{
+		var rawData = _encryptor.DecryptData(Encoding.UTF8.GetString(Convert.FromBase64String(value)));
+		this.Input = this.Input == "Empty" ? rawData : $"{this.Input}|{rawData}";
+		return rawData;
+	}
+
+	private string Encrypt()
+	{
+		return _encryptor.EncryptData(JsonConvert.SerializeObject(_response));
+	}
+
+	private string ValidateModel(dynamic m)
+	{
+		Validate(m);
+		return ModelState.IsValid ? "valid" : string.Join("; ", ModelState.Values.SelectMany(o => o.Errors).Select(o => o.ErrorMessage));
+	}
+
+	public ControllerNameController(IEncryptionManager encryptor)
+	{
+		_response = Response;
+		_encryptor = encryptor;
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		_encryptor.Dispose();
+		_response.Dispose();
+		base.Dispose(disposing);
+	}
+}
