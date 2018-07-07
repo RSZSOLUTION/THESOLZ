@@ -42,7 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataOperationManager.cs" />
+    <Compile Include="IDataOperationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Backbone\Function\" />
+    <Folder Include="Backbone\Procedure\" />
+    <Folder Include="Backbone\Table\" />
+    <Folder Include="Backbone\View\" />
+    <Folder Include="Core\ORM\" />
+    <Folder Include="Repository\Base\" />
+    <Folder Include="Utility\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
